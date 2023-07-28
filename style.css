@@ -1,0 +1,52 @@
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 70vh;
+  text-align: left;
+  margin-left: 300px;
+  font-family: "Meiryo";
+}
+
+h1 {
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+  font-family: "Meiryo";
+}
+
+form input[type="radio"],
+form input[type="checkbox"] {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.input-container input[type="text"] {
+  width: 180px;
+  margin-right: 10px;
+}
+
+.input-container input[type="button"] {
+  width: auto;
+}
+
+.task-item {
+  margin-bottom: 10px; /* スペースを広く調整 */
+}
+
+.task-item input[type="button"] {
+  margin-left: 10px;
+}
+
+.task-item span {
+  margin-right: 30px; /* 入力テキストと作業中ボタンの間のスペースを広く調整 */
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>ToDoリスト</h1>
+    <form>
+      <div>
+        <input type="radio" id="itemA" name="item" value="all" />
+        <label for="itemA">すべて</label>
+        <input type="radio" id="itemB" name="item" value="progress" />
+        <label for="itemB">作業中</label>
+        <input type="radio" id="itemC" name="item" value="complete" />
+        <label for="itemC">完了</label>
+      </div>
+      <h2>ID コメント 状態</h2>
+    </form>
+    <div id="result"></div>
+    <h2>新規タスクの追加</h2>
+    <div class="input-container">
+      <label for="input_task"></label>
+      <input type="text" id="input_task" name="input_task" />
+      <input type="button" value="追加" id="add_button" />
+    </div>
+    <script src="todolist.js"></script>
+  </body>
+</html>

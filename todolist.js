@@ -2,18 +2,8 @@
 let taskId = 0;
 const tasks = [];
 
-// 連番をインクリメントしながらタスクのテキストとボタンを含むHTMLを生成し作成した要素を返す
-const createTaskItem = (text) => {
-  taskId++;
-  // オブジェクト＝辞書の定義
-  const task = {
-    id: taskId,
-    text: text,
-    // タスク作成時のデフォルト表示
-    status: "作業中",
-  };
-  tasks.push(task);
-
+// タスクの表示用要素を作成
+const createTaskItem = (task) => {
   // タスクの表示用要素を作成
   const taskItem = document.createElement("div");
   taskItem.classList.add("task-item");
@@ -23,13 +13,13 @@ const createTaskItem = (text) => {
   const taskText = document.createElement("span");
 
   // 連番と入力したテキストを表示
-  taskText.textContent = `${taskId} ${task.text}`;
+  taskText.textContent = `${task.id} ${task.text}`;
   taskItem.appendChild(taskText);
 
   // タスク状態を示すボタン要素を作成
   const statusButton = document.createElement("input");
   statusButton.type = "button";
-  statusButton.value = "作業中";
+  statusButton.value = task.status;
 
   // タスク削除用のボタン要素を作成
   const deleteButton = document.createElement("input");
@@ -61,9 +51,18 @@ const appendResult = (item) => {
 const addTask = () => {
   const inputTask = document.getElementById("input_task");
   const taskText = inputTask.value;
+  // 入力欄を空にする
   inputTask.value = "";
 
-  const taskItem = createTaskItem(taskText);
+  taskId++;
+  const task = {
+    id: taskId,
+    text: taskText,
+    status: "作業中",
+  };
+  tasks.push(task);
+
+  const taskItem = createTaskItem(task);
   appendResult(taskItem);
 };
 
@@ -81,18 +80,76 @@ const deleteTask = (taskId) => {
   }
 };
 
-// 指定されたタスクの状態を切り替える
-const updateTask = (taskId, statusButton) => {
-  statusButton.addEventListener("click", () => {
-    if (taskId.status === "作業中") {
-      taskId.status = "完了";
-    } else {
-      taskId.status = "作業中";
+// ラジオボタンの値を取得する関数
+const getSelectedStatus = () => {
+  const radioButtons = document.getElementsByName("item");
+  for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+      return radioButton.value;
     }
-    // ステータスボタンの表示を更新
-    statusButton.value = taskId.status;
+  }
+  return "all";
+};
+
+// 現在表示されているタスクとその作業中または完了ステータスを取得
+const showTasks = () => {
+  // 選択されたラジオボタンの値を取得
+  const selectedStatus = getSelectedStatus();
+
+  // タスク表示領域の要素を取得
+  const resultHolder = document.getElementById("result");
+  resultHolder.innerHTML = ""; // タスク表示領域をクリア
+
+  // 選択されたステータスに応じてタスクをフィルタリングして表示
+  tasks.forEach((task) => {
+    if (
+      selectedStatus === "all" ||
+      (selectedStatus === "progress" && task.status === "作業中") ||
+      (selectedStatus === "complete" && task.status === "完了")
+    ) {
+      const taskItem = createTaskItem(task); // タスクオブジェクトを渡す
+      resultHolder.appendChild(taskItem);
+    }
   });
 };
+
+// 指定されたタスクの状態を切り替える
+const updateTask = (task, statusButton) => {
+  statusButton.addEventListener("click", () => {
+    if (task.status === "作業中") {
+      task.status = "完了";
+    } else {
+      task.status = "作業中";
+    }
+    // ステータスボタンの表示を更新
+    statusButton.value = task.status;
+  });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  let prevSelectedStatus = getSelectedStatus(); // 前回選択されていたステータスを保存
+
+  showTasks();
+
+  // ラジオボタンがクリックされたときにタスクを再表示する
+  const radioButtons = document.getElementsByName("item");
+  for (const radioButton of radioButtons) {
+    radioButton.addEventListener("click", () => {
+      const currentSelectedStatus = getSelectedStatus();
+      if (currentSelectedStatus !== prevSelectedStatus) {
+        prevSelectedStatus = currentSelectedStatus;
+        showTasks();
+
+        // 他のラジオボタンの選択を解除
+        for (const otherRadioButton of radioButtons) {
+          if (otherRadioButton !== radioButton) {
+            otherRadioButton.checked = false;
+          }
+        }
+      }
+    });
+  }
+});
 
 // 追加ボタンのクリックイベントをハンドリングし新しいタスクを追加する処理を呼び出し
 const addButton = document.getElementById("add_button");
